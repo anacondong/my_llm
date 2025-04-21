@@ -1,0 +1,86 @@
+Perfect! Extracting frames from your video is a great first step to build your custom basketball/hoop detection dataset.
+
+---
+
+## 🎬 Step-by-Step: Extract Frames from Your Video Automatically
+
+We'll write a Python script to:
+- Load your `.mp4` video
+- Extract a frame every **N seconds** (or every Nth frame)
+- Save them as images in a folder (e.g., `frames/`)
+
+---
+
+### ✅ 1. Create a Python Script
+
+Save this as `extract_frames.py` in your project folder:
+
+```python
+import cv2
+import os
+
+# === CONFIG ===
+video_path = "your_video.mp4"       # <- Change this to your actual video file
+output_folder = "frames"            # <- Output folder to save frames
+frame_interval = 30                 # <- Save 1 frame every N frames
+
+# === SETUP ===
+os.makedirs(output_folder, exist_ok=True)
+
+cap = cv2.VideoCapture(video_path)
+if not cap.isOpened():
+    print("Error: Cannot open video.")
+    exit()
+
+frame_count = 0
+saved_count = 0
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    if frame_count % frame_interval == 0:
+        filename = os.path.join(output_folder, f"frame_{saved_count:04d}.jpg")
+        cv2.imwrite(filename, frame)
+        print(f"Saved {filename}")
+        saved_count += 1
+
+    frame_count += 1
+
+cap.release()
+print(f"✅ Done! Extracted {saved_count} frames to '{output_folder}'")
+```
+
+---
+
+### ⚙️ 2. How to Run
+
+In your VS Code terminal:
+
+```bash
+python extract_frames.py
+```
+
+Make sure `your_video.mp4` is in the same folder or adjust the path.
+
+---
+
+### 🎯 Tip: Control Speed
+
+You can change `frame_interval` to:
+- `30` to get ~1 frame per second (if your video is 30 fps)
+- `10` for more frequent frames
+- Or extract every **N seconds** like this:
+
+```python
+fps = cap.get(cv2.CAP_PROP_FPS)
+frame_interval = int(fps * N)  # N seconds
+```
+
+---
+
+## Next Step: Label the Frames
+Once you have images, we can load them into a tool like **LabelImg** or **Roboflow** to annotate basketballs and hoops.
+
+Want me to walk you through installing LabelImg on Windows next?

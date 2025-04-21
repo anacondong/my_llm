@@ -1,0 +1,119 @@
+Awesome, Dong! You're now stepping into **custom object detection**, and that's a great move 👏
+
+To train a model to detect **basketballs** and **hoops**, you'll go through a few main steps:
+
+---
+
+## 🧠 1. **Understand the Basics**
+You'll be training a custom YOLOv8 model. YOLO stands for "You Only Look Once" — it's fast and great for real-time object detection.
+
+---
+
+## 🗂️ 2. **Collect and Label Your Data**
+
+### 📸 A. Collect Images or Video
+- Use your `.mp4` video or take screenshots of:
+  - Basketballs at different positions
+  - The hoop (front view, side view, zoom in/out)
+- Try to get **diverse angles**, lighting, and scenarios.
+
+### 🏷️ B. Annotate Your Images
+Use a labeling tool like:
+
+| Tool | Description |
+|------|-------------|
+| [LabelImg](https://github.com/tzutalin/labelImg) | Easy to use, open-source GUI tool |
+| [Roboflow](https://roboflow.com/) | Web-based, lets you label and export for YOLO format |
+| [CVAT](https://github.com/opencv/cvat) | More powerful, used in production setups |
+
+Label:
+- Class `basketball`
+- Class `hoop`
+
+You’ll end up with `.txt` files (YOLO format) for each image.
+
+---
+
+## 📁 3. **Organize Your Dataset**
+Structure like this:
+
+```
+my_dataset/
+├── images/
+│   ├── train/
+│   ├── val/
+├── labels/
+│   ├── train/
+│   ├── val/
+```
+
+Each `.txt` file should have the same filename as the image and include lines like:
+
+```
+0 0.5 0.5 0.2 0.2  ← (class_id x_center y_center width height) normalized
+1 0.3 0.6 0.1 0.15
+```
+
+---
+
+## 🧠 4. **Train Your YOLOv8 Model**
+
+Install the Ultralytics package (if not yet):
+
+```bash
+pip install ultralytics
+```
+
+Create a YAML file `basket_data.yaml` describing your dataset:
+
+```yaml
+path: /path/to/my_dataset
+train: images/train
+val: images/val
+
+names:
+  0: basketball
+  1: hoop
+```
+
+Then train it:
+
+```bash
+yolo task=detect mode=train model=yolov8n.pt data=basket_data.yaml epochs=50 imgsz=640
+```
+
+---
+
+## ✅ 5. **Test Your Model**
+
+Once trained, test it on new video or images:
+
+```bash
+yolo task=detect mode=predict model=runs/detect/train/weights/best.pt source=your_video.mp4
+```
+
+Or you can load it in Python:
+
+```python
+model = YOLO("runs/detect/train/weights/best.pt")
+results = model("your_video.mp4")
+```
+
+---
+
+## 💡 Optional: Use Roboflow to Speed Up Dataset Creation
+Roboflow can help with:
+- Labeling
+- Auto-splitting train/val
+- Exporting in YOLOv8 format
+
+---
+
+## Ready to Get Started?
+
+Would you like me to:
+- Help you set up LabelImg on Windows?
+- Guide you to extract frames from your video automatically?
+- Or give you a checklist of steps in VS Code to train the model?
+
+Let me know where you want to begin 🙌

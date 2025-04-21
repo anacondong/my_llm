@@ -1,0 +1,9 @@
+# my_llm/data.yaml
+
+path: D:/Coding/my_llm/datasets/dataset
+train: images
+val: images
+
+names:
+  0: basketball
+  1: hoop
